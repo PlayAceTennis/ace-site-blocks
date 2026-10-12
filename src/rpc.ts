@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { ThemeSchema } from "./theme";
-import { NavSchema } from "./nav";
+import { LenientThemeSchema } from "./theme";
+import { LenientNavSchema } from "./nav";
 import { LegalSchema } from "./legal";
 import { PageSeoSchema } from "./page";
 
@@ -69,8 +69,8 @@ export const SiteBundleSchema = z.object({
   site: z.object({
     id: z.string(),
     template: z.string().nullable(),
-    theme: ThemeSchema,
-    nav: NavSchema,
+    theme: LenientThemeSchema,
+    nav: LenientNavSchema,
     legal: LegalSchema,
     publishedAt: z.string().nullable(),
   }),
@@ -151,8 +151,24 @@ export const SiteFeeSchema = z.object({
 });
 export type SiteFee = z.infer<typeof SiteFeeSchema>;
 
+export const SiteSponsorSchema = z.object({
+  id: idLike,
+  name: z.string(),
+  logoUrl: z.string(),
+  url: z.string().nullable(),
+  tier: z.enum(["main", "premium", "partner", "supporter"]),
+});
+export type SiteSponsor = z.infer<typeof SiteSponsorSchema>;
+
+/** Aggregate of the club's Ace reviews; null when there are too few reviews to show anonymously. */
+export const SiteReviewSummarySchema = z
+  .object({ average: z.number().min(1).max(5), count: z.number().int().min(1) })
+  .nullable();
+export type SiteReviewSummary = z.infer<typeof SiteReviewSummarySchema>;
+
 export const SiteNewsListSchema = z.array(SiteNewsItemSchema);
 export const SiteEventListSchema = z.array(SiteEventSchema);
 export const SiteTeamListSchema = z.array(SiteTeamSchema);
 export const SiteBoardListSchema = z.array(SiteBoardMemberSchema);
 export const SiteFeeListSchema = z.array(SiteFeeSchema);
+export const SiteSponsorListSchema = z.array(SiteSponsorSchema);

@@ -6,6 +6,7 @@ export const HeroPropsSchema = z.object({
   title,
   subtitle: z.string().trim().max(300).optional(),
   imageUrl: assetUrl.optional(),
+  imageAlt: z.string().trim().max(200).optional(),
   ctas: z.array(z.object({ label, href: safeHref })).max(2),
   layout: z.enum(["center", "left"]),
   overlay: z.boolean(),
