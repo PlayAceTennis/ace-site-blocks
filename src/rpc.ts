@@ -172,3 +172,44 @@ export const SiteTeamListSchema = z.array(SiteTeamSchema);
 export const SiteBoardListSchema = z.array(SiteBoardMemberSchema);
 export const SiteFeeListSchema = z.array(SiteFeeSchema);
 export const SiteSponsorListSchema = z.array(SiteSponsorSchema);
+
+export const SiteCourtSchema = z.object({
+  id: z.string(), name: z.string(), type: z.string().nullable(), surface: z.string().nullable(),
+  features: z.array(z.string()), inSeason: z.boolean(),
+});
+export type SiteCourt = z.infer<typeof SiteCourtSchema>;
+export const SiteTeamTrainingSchema = z.object({
+  id: idLike, name: z.string().nullable(), teamName: z.string(), daysOfWeek: z.array(z.number().int().min(1).max(7)).nullable(),
+  startTime: z.string(), endTime: z.string(), specificDate: z.string().nullable(), courtName: z.string().nullable(),
+});
+export type SiteTeamTraining = z.infer<typeof SiteTeamTrainingSchema>;
+export const SiteTrainerSchema = z.object({
+  id: idLike, name: z.string(), specialization: z.string().nullable(), bio: z.string().nullable(),
+  languages: z.array(z.string()), experienceYears: z.number().nullable(),
+  certifications: z.array(z.object({ name: z.string(), issuer: z.string().nullable() })),
+});
+export type SiteTrainer = z.infer<typeof SiteTrainerSchema>;
+export const SiteCourseSchema = z.object({
+  id: idLike, title: z.string(), description: z.string().nullable(), date: z.string(), startTime: z.string(), endTime: z.string(),
+  trainerName: z.string(), location: z.string().nullable(), price: z.union([z.number(), z.string()]).nullable(), currency: z.string(),
+  maxParticipants: z.number(), freePlaces: z.number().int().min(0),
+});
+export type SiteCourse = z.infer<typeof SiteCourseSchema>;
+export const SiteTournamentSchema = z.object({
+  id: idLike, name: z.string(), description: z.string().nullable(), tournamentType: z.string(), gameFormat: z.string(), status: z.string(),
+  startDate: z.string().nullable(), endDate: z.string().nullable(), registrationDeadline: z.string().nullable(),
+  entryFee: z.union([z.number(), z.string()]).nullable(), location: z.string().nullable(), maxParticipants: z.number().nullable(), registeredCount: z.number().int().min(0),
+});
+export type SiteTournament = z.infer<typeof SiteTournamentSchema>;
+export const SiteGallerySchema = z.object({ name: z.string(), photos: z.array(z.object({ id: z.string(), url: z.string().url(), caption: z.string().nullable() })) });
+export type SiteGallery = z.infer<typeof SiteGallerySchema>;
+export const SiteCourtAvailabilitySchema = z.object({
+  date: z.string(), slotMinutes: z.number().int().positive(), closed: z.boolean(),
+  courts: z.array(SiteCourtSchema.omit({ features: true, inSeason: true }).extend({ slots: z.array(z.object({ start: z.string(), free: z.boolean() })) })),
+});
+export type SiteCourtAvailability = z.infer<typeof SiteCourtAvailabilitySchema>;
+export const SiteCourtListSchema = z.array(SiteCourtSchema);
+export const SiteTeamTrainingListSchema = z.array(SiteTeamTrainingSchema);
+export const SiteTrainerListSchema = z.array(SiteTrainerSchema);
+export const SiteCourseListSchema = z.array(SiteCourseSchema);
+export const SiteTournamentListSchema = z.array(SiteTournamentSchema);

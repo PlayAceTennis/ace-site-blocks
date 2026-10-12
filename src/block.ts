@@ -1,3 +1,10 @@
+import { TeamTrainingsPropsSchema, defaultTeamTrainingsProps, teamTrainingsMeta } from "./blocks/team_trainings";
+import { PhotoAlbumPropsSchema, defaultPhotoAlbumProps, photoAlbumMeta } from "./blocks/photo_album";
+import { TournamentsPropsSchema, defaultTournamentsProps, tournamentsMeta } from "./blocks/tournaments";
+import { CoursesPropsSchema, defaultCoursesProps, coursesMeta } from "./blocks/courses";
+import { TrainersPropsSchema, defaultTrainersProps, trainersMeta } from "./blocks/trainers";
+import { CourtAvailabilityPropsSchema, defaultCourtAvailabilityProps, courtAvailabilityMeta } from "./blocks/court_availability";
+import { CourtsPropsSchema, defaultCourtsProps, courtsMeta } from "./blocks/courts";
 import { z } from "zod";
 import type { BlockMeta } from "./blocks/meta";
 import { SectionSchema } from "./section";
@@ -21,6 +28,8 @@ import { TestimonialsPropsSchema, defaultTestimonialsProps, testimonialsMeta } f
 import { VideoEmbedPropsSchema, defaultVideoEmbedProps, videoEmbedMeta } from "./blocks/video_embed";
 import { SpacerPropsSchema, defaultSpacerProps, spacerMeta } from "./blocks/spacer";
 import { ColumnsPropsSchema, defaultColumnsProps, columnsMeta } from "./blocks/columns";
+import { BoardMembersPropsSchema, defaultBoardMembersProps, boardMembersMeta } from "./blocks/board_members";
+import { FeeTablePropsSchema, defaultFeeTableProps, feeTableMeta } from "./blocks/fee_table";
 
 export const BLOCKS_VERSION = 1;
 export const MAX_BLOCKS = 60;
@@ -31,6 +40,13 @@ const def = <T extends string, P extends z.ZodType>(type: T, props: P) =>
   z.object({ id: blockId, type: z.literal(type), props, section: SectionSchema.optional() });
 
 export const BlockSchema = z.discriminatedUnion("type", [
+  def("courts", CourtsPropsSchema),
+  def("court_availability", CourtAvailabilityPropsSchema),
+  def("trainers", TrainersPropsSchema),
+  def("courses", CoursesPropsSchema),
+  def("tournaments", TournamentsPropsSchema),
+  def("photo_album", PhotoAlbumPropsSchema),
+  def("team_trainings", TeamTrainingsPropsSchema),
   def("hero", HeroPropsSchema),
   def("rich_text", RichTextPropsSchema),
   def("image_text", ImageTextPropsSchema),
@@ -51,6 +67,8 @@ export const BlockSchema = z.discriminatedUnion("type", [
   def("video_embed", VideoEmbedPropsSchema),
   def("spacer", SpacerPropsSchema),
   def("columns", ColumnsPropsSchema),
+  def("board_members", BoardMembersPropsSchema),
+  def("fee_table", FeeTablePropsSchema),
 ]);
 export type Block = z.infer<typeof BlockSchema>;
 export type BlockType = Block["type"];
@@ -66,6 +84,13 @@ interface BlockDefinition<T extends BlockType> {
 }
 
 export const BLOCK_REGISTRY: { [T in BlockType]: BlockDefinition<T> } = {
+  courts: { schema: CourtsPropsSchema, defaults: defaultCourtsProps, meta: courtsMeta },
+  court_availability: { schema: CourtAvailabilityPropsSchema, defaults: defaultCourtAvailabilityProps, meta: courtAvailabilityMeta },
+  trainers: { schema: TrainersPropsSchema, defaults: defaultTrainersProps, meta: trainersMeta },
+  courses: { schema: CoursesPropsSchema, defaults: defaultCoursesProps, meta: coursesMeta },
+  tournaments: { schema: TournamentsPropsSchema, defaults: defaultTournamentsProps, meta: tournamentsMeta },
+  photo_album: { schema: PhotoAlbumPropsSchema, defaults: defaultPhotoAlbumProps, meta: photoAlbumMeta },
+  team_trainings: { schema: TeamTrainingsPropsSchema, defaults: defaultTeamTrainingsProps, meta: teamTrainingsMeta },
   hero: { schema: HeroPropsSchema, defaults: defaultHeroProps, meta: heroMeta },
   rich_text: { schema: RichTextPropsSchema, defaults: defaultRichTextProps, meta: richTextMeta },
   image_text: { schema: ImageTextPropsSchema, defaults: defaultImageTextProps, meta: imageTextMeta },
@@ -94,6 +119,8 @@ export const BLOCK_REGISTRY: { [T in BlockType]: BlockDefinition<T> } = {
   video_embed: { schema: VideoEmbedPropsSchema, defaults: defaultVideoEmbedProps, meta: videoEmbedMeta },
   spacer: { schema: SpacerPropsSchema, defaults: defaultSpacerProps, meta: spacerMeta },
   columns: { schema: ColumnsPropsSchema, defaults: defaultColumnsProps, meta: columnsMeta },
+  board_members: { schema: BoardMembersPropsSchema, defaults: defaultBoardMembersProps, meta: boardMembersMeta },
+  fee_table: { schema: FeeTablePropsSchema, defaults: defaultFeeTableProps, meta: feeTableMeta },
 };
 
 export const BLOCK_TYPES = Object.keys(BLOCK_REGISTRY) as BlockType[];
